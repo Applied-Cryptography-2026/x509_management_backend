@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/your-org/x509-clean-architecture/domain/model"
 	"github.com/your-org/x509-clean-architecture/usecase/interactor"
 )
 

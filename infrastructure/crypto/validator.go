@@ -2,7 +2,6 @@ package crypto
 
 import (
 	"crypto/x509"
-	"crypto/x509/pkix"
 	"encoding/pem"
 	"errors"
 	"fmt"
@@ -37,9 +36,9 @@ func (v *Validator) ValidateChain(chain []*x509.Certificate, roots *x509.CertPoo
 	}
 
 	opts := x509.VerifyOptions{
-		DNSName:     chain[0].DNSNames[0], // leaf DNS name
+		DNSName:       chain[0].DNSNames[0], // leaf DNS name
 		Intermediates: x509.NewCertPool(),
-		Roots:       roots,
+		Roots:         roots,
 	}
 
 	// Add all but the last cert (root) to intermediates pool
@@ -84,24 +83,24 @@ func (v *Validator) VerifySignature(cert, issuer *x509.Certificate) error {
 }
 
 // KeyUsageFromString converts a string key usage name to pkix.KeyUsage.
-func KeyUsageFromString(name string) (pkix.KeyUsage, bool) {
+func KeyUsageFromString(name string) (x509.KeyUsage, bool) {
 	switch name {
 	case "digitalSignature":
-		return pkix.KeyUsageDigitalSignature, true
+		return x509.KeyUsageDigitalSignature, true
 	case "keyEncipherment":
-		return pkix.KeyUsageKeyEncipherment, true
+		return x509.KeyUsageKeyEncipherment, true
 	case "dataEncipherment":
-		return pkix.KeyUsageDataEncipherment, true
+		return x509.KeyUsageDataEncipherment, true
 	case "keyCertSign":
-		return pkix.KeyUsageCertSign, true
+		return x509.KeyUsageCertSign, true
 	case "cRLSign":
-		return pkix.KeyUsageCRLSign, true
+		return x509.KeyUsageCRLSign, true
 	case "keyAgreement":
-		return pkix.KeyUsageKeyAgreement, true
+		return x509.KeyUsageKeyAgreement, true
 	case "encipherOnly":
-		return pkix.KeyUsageEncipherOnly, true
+		return x509.KeyUsageEncipherOnly, true
 	case "decipherOnly":
-		return pkix.KeyUsageDecipherOnly, true
+		return x509.KeyUsageDecipherOnly, true
 	default:
 		return 0, false
 	}

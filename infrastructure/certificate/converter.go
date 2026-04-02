@@ -2,7 +2,7 @@ package certificate
 
 import (
 	"crypto/x509"
-	"encoding/pem"
+	"net"
 	"strings"
 	"time"
 
@@ -28,22 +28,22 @@ func (c *Converter) ToDomain(cert *x509.Certificate, pemStr, keyPEM string) *mod
 	}
 
 	return &model.Certificate{
-		Subject:         cert.Subject.String(),
-		Issuer:          cert.Issuer.String(),
-		Serial:          cert.SerialNumber.Text(16),
-		Fingerprint:     crypto.SHA256Fingerprint(cert),
-		NotBefore:       cert.NotBefore,
-		NotAfter:        cert.NotAfter,
-		KeyUsage:        keyUsageStrings(cert.KeyUsage),
-		ExtKeyUsage:     extKeyUsageStrings(cert.ExtKeyUsage),
-		DNSNames:        cert.DNSNames,
-		IPAddresses:     ipStrings(cert.IPAddresses),
-		IsCA:            cert.IsCA,
-		CRLURL:          strings.Join(cert.CRLDistributionPoints, ","),
-		OCSPURL:         strings.Join(cert.OCSPServer, ","),
-		CertPEM:         pemStr,
-		KeyPEM:          keyPEM,
-		Status:          status,
+		Subject:     cert.Subject.String(),
+		Issuer:      cert.Issuer.String(),
+		Serial:      cert.SerialNumber.Text(16),
+		Fingerprint: crypto.SHA256Fingerprint(cert),
+		NotBefore:   cert.NotBefore,
+		NotAfter:    cert.NotAfter,
+		KeyUsage:    keyUsageStrings(cert.KeyUsage),
+		ExtKeyUsage: extKeyUsageStrings(cert.ExtKeyUsage),
+		DNSNames:    cert.DNSNames,
+		IPAddresses: ipStrings(cert.IPAddresses),
+		IsCA:        cert.IsCA,
+		CRLURL:      strings.Join(cert.CRLDistributionPoints, ","),
+		OCSPURL:     strings.Join(cert.OCSPServer, ","),
+		CertPEM:     pemStr,
+		KeyPEM:      keyPEM,
+		Status:      status,
 	}
 }
 
@@ -56,18 +56,20 @@ func (c *Converter) ToX509(cert *model.Certificate) (*x509.Certificate, error) {
 
 func keyUsageStrings(ku x509.KeyUsage) []string {
 	mapping := []struct {
-		bit x509.KeyUsage
+		bit  x509.KeyUsage
 		name string
 	}{
-		{x509.DigitalSignature, "digitalSignature"},
-		{x509.KeyEncipherment, "keyEncipherment"},
-		{x509.DataEncipherment, "dataEncipherment"},
-		{x509.KeyCertSign, "keyCertSign"},
-		{x509.CRLSign, "cRLSign"},
-		{x509.KeyAgreement, "keyAgreement"},
-		{x509.EncipherOnly, "encipherOnly"},
-		{x509.DecipherOnly, "decipherOnly"},
+		{x509.KeyUsageDigitalSignature, "digitalSignature"},
+		{x509.KeyUsageContentCommitment, "contentCommitment"}, // Non-Repudiation
+		{x509.KeyUsageKeyEncipherment, "keyEncipherment"},
+		{x509.KeyUsageDataEncipherment, "dataEncipherment"},
+		{x509.KeyUsageKeyAgreement, "keyAgreement"},
+		{x509.KeyUsageCertSign, "keyCertSign"},
+		{x509.KeyUsageCRLSign, "cRLSign"},
+		{x509.KeyUsageEncipherOnly, "encipherOnly"},
+		{x509.KeyUsageDecipherOnly, "decipherOnly"},
 	}
+
 	var out []string
 	for _, m := range mapping {
 		if ku&m.bit != 0 {
@@ -79,12 +81,12 @@ func keyUsageStrings(ku x509.KeyUsage) []string {
 
 func extKeyUsageStrings(eku []x509.ExtKeyUsage) []string {
 	mapping := map[x509.ExtKeyUsage]string{
-		x509.ExtKeyUsageServerAuth:    "serverAuth",
-		x509.ExtKeyUsageClientAuth:    "clientAuth",
-		x509.ExtKeyUsageCodeSigning:  "codeSigning",
+		x509.ExtKeyUsageServerAuth:      "serverAuth",
+		x509.ExtKeyUsageClientAuth:      "clientAuth",
+		x509.ExtKeyUsageCodeSigning:     "codeSigning",
 		x509.ExtKeyUsageEmailProtection: "emailProtection",
-		x509.ExtKeyUsageTimeStamping: "timeStamping",
-		x509.ExtKeyUsageOCSPSigning:  "ocspSigning",
+		x509.ExtKeyUsageTimeStamping:    "timeStamping",
+		x509.ExtKeyUsageOCSPSigning:     "ocspSigning",
 	}
 	var out []string
 	for _, u := range eku {
@@ -95,10 +97,10 @@ func extKeyUsageStrings(eku []x509.ExtKeyUsage) []string {
 	return out
 }
 
-func ipStrings(ips []interface{}) []string {
+func ipStrings(ips []net.IP) []string {
 	out := make([]string, len(ips))
 	for i, ip := range ips {
-		out[i] = ip.(interface{ String() string }).String()
+		out[i] = ip.String()
 	}
 	return out
 }

@@ -62,14 +62,14 @@ func parsePrivateKey(der []byte) (any, error) {
 		return key, nil
 	}
 	// Fall back: try PKCS1 RSA
-	_, err = x509.ParsePKCS1PrivateKey(der)
+	key, err = x509.ParsePKCS1PrivateKey(der)
 	if err == nil {
-		return x509.ParsePKCS1PrivateKey(der)
+		return key, nil
 	}
 	// Fall back: try EC
-	_, err = x509.ParseECPrivateKey(der)
+	key, err = x509.ParseECPrivateKey(der)
 	if err == nil {
-		return x509.ParseECPrivateKey(der)
+		return key, nil
 	}
 	return nil, errors.New("crypto/pem: unable to parse private key format")
 }

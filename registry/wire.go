@@ -5,7 +5,6 @@ import (
 	ip "github.com/your-org/x509-clean-architecture/interface/presenter"
 	ir "github.com/your-org/x509-clean-architecture/interface/repository"
 	"github.com/your-org/x509-clean-architecture/usecase/interactor"
-	"gorm.io/gorm"
 )
 
 // ---- Certificate wire ------------------------------------------------

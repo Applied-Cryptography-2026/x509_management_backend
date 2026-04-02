@@ -1,7 +1,6 @@
 package model
 
 import (
-	"crypto/x509"
 	"time"
 )
 
