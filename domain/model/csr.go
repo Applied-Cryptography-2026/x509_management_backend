@@ -1,7 +1,6 @@
 package model
 
 import (
-	"crypto/x509"
 	"time"
 )
 
@@ -14,12 +13,12 @@ type CSR struct {
 	SignatureAlgorithm string   `json:"signature_algorithm"` //EX:SHA256 and RSA
 	DNSNames           []string `json:"dns_names"`
 	IPAddresses        []string `json:"ip_addresses"`
-	// RequesterEmail     string     `json:"requester_email"`
+	RequesterEmail     string     `json:"requester_email"`
 	Status     CSRStatus  `json:"status"` // pending, approved, rejected, issued
 	ApprovedAt *time.Time `json:"approved_at,omitempty"`
 	RejectedAt *time.Time `json:"rejected_at,omitempty"`
 	ApproverID *uint      `json:"approver_id,omitempty"`
-	// Notes              string     `json:"notes,omitempty"`
+	Notes              string     `json:"notes,omitempty"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`

@@ -78,7 +78,7 @@ func (s *Signer) GenerateSelfSignedCA(
 		Subject:       subject,
 		NotBefore:     notBefore,
 		NotAfter:      notAfter,
-		KeyUsage: x509.KeyUsageKeyCertSign |
+		KeyUsage: x509.KeyUsageCertSign |
 			x509.KeyUsageCRLSign |
 			x509.KeyUsageDigitalSignature,
 		BasicConstraintsValid: true,

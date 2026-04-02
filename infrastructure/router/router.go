@@ -19,31 +19,79 @@ func NewRouter(e *echo.Echo, ac controller.AppController) *echo.Echo {
 		return c.JSON(200, map[string]string{"status": "ok"})
 	})
 
-	// Certificate routes
+	// --- Certificate routes ---
 	cert := e.Group("/certificates")
-	cert.GET("",           func(c echo.Context) error { return ac.Certificate.GetCertificates(c) })
-	cert.GET("/:id",      func(c echo.Context) error { return ac.Certificate.GetCertificate(c) })
-	cert.POST("",         func(c echo.Context) error { return ac.Certificate.ImportCertificate(c) })
-	cert.DELETE("/:id",   func(c echo.Context) error { return ac.Certificate.DeleteCertificate(c) })
-	cert.POST("/:id/revoke", func(c echo.Context) error { return ac.Certificate.RevokeCertificate(c) })
-	cert.GET("/expiring", func(c echo.Context) error { return ac.Certificate.GetExpiringCertificates(c) })
-	cert.POST("/validate", func(c echo.Context) error { return ac.Certificate.ValidateCertificate(c) })
+	cert.GET("", func(c echo.Context) error { 
+		return ac.Certificate.GetCertificates(controller.NewEchoContext(c)) 
+	})
 
-	// CSR routes
+	cert.GET("/:id", func(c echo.Context) error { 
+		return ac.Certificate.GetCertificate(controller.NewEchoContext(c)) 
+	})
+
+	cert.POST("", func(c echo.Context) error { 
+		return ac.Certificate.ImportCertificate(controller.NewEchoContext(c)) 
+	})
+
+	cert.DELETE("/:id", func(c echo.Context) error { 
+		return ac.Certificate.DeleteCertificate(controller.NewEchoContext(c)) 
+	})
+
+	cert.POST("/:id/revoke", func(c echo.Context) error { 
+		return ac.Certificate.RevokeCertificate(controller.NewEchoContext(c)) 
+	})
+
+	cert.GET("/expiring", func(c echo.Context) error { 
+		return ac.Certificate.GetExpiringCertificates(controller.NewEchoContext(c)) 
+	})
+
+	cert.POST("/validate", func(c echo.Context) error { 
+		return ac.Certificate.ValidateCertificate(controller.NewEchoContext(c)) 
+	})
+
+	// --- CSR routes ---
 	csr := e.Group("/csrs")
-	csr.GET("",        func(c echo.Context) error { return ac.CSR.GetCSRs(c) })
-	csr.GET("/:id",   func(c echo.Context) error { return ac.CSR.GetCSR(c) })
-	csr.POST("",      func(c echo.Context) error { return ac.CSR.SubmitCSR(c) })
-	csr.POST("/:id/approve",  func(c echo.Context) error { return ac.CSR.ApproveCSR(c) })
-	csr.POST("/:id/reject",   func(c echo.Context) error { return ac.CSR.RejectCSR(c) })
+	csr.GET("", func(c echo.Context) error { 
+		return ac.CSR.GetCSRs(controller.NewEchoContext(c)) 
+	})
 
-	// Chain routes
+	csr.GET("/:id", func(c echo.Context) error { 
+		return ac.CSR.GetCSR(controller.NewEchoContext(c)) 
+	})
+
+	csr.POST("", func(c echo.Context) error { 
+		return ac.CSR.SubmitCSR(controller.NewEchoContext(c)) 
+	})
+
+	csr.POST("/:id/approve", func(c echo.Context) error { 
+		return ac.CSR.ApproveCSR(controller.NewEchoContext(c)) 
+	})
+
+	csr.POST("/:id/reject", func(c echo.Context) error { 
+		return ac.CSR.RejectCSR(controller.NewEchoContext(c)) 
+	})
+
+	// --- Chain routes ---
 	chain := e.Group("/chains")
-	chain.GET("",      func(c echo.Context) error { return ac.Chain.GetChains(c) })
-	chain.GET("/:id", func(c echo.Context) error { return ac.Chain.GetChain(c) })
-	chain.POST("",     func(c echo.Context) error { return ac.Chain.CreateChain(c) })
-	chain.DELETE("/:id", func(c echo.Context) error { return ac.Chain.DeleteChain(c) })
-	chain.POST("/:id/validate", func(c echo.Context) error { return ac.Chain.ValidateChain(c) })
+	chain.GET("", func(c echo.Context) error { 
+		return ac.Chain.GetChains(controller.NewEchoContext(c)) 
+	})
+
+	chain.GET("/:id", func(c echo.Context) error { 
+		return ac.Chain.GetChain(controller.NewEchoContext(c)) 
+	})
+
+	chain.POST("", func(c echo.Context) error { 
+		return ac.Chain.CreateChain(controller.NewEchoContext(c)) 
+	})
+
+	chain.DELETE("/:id", func(c echo.Context) error { 
+		return ac.Chain.DeleteChain(controller.NewEchoContext(c)) 
+	})
+	
+	chain.POST("/:id/validate", func(c echo.Context) error { 
+		return ac.Chain.ValidateChain(controller.NewEchoContext(c)) 
+	})
 
 	return e
 }

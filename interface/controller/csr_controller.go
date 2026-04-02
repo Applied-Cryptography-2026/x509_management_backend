@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/your-org/x509-clean-architecture/domain/model"
 	"github.com/your-org/x509-clean-architecture/usecase/interactor"
 )
 
@@ -31,15 +32,13 @@ func NewCSRIteractorController(ci interactor.CSRIteractor) CSRIteractorControlle
 func (sc *csrController) GetCSRs(c Context) error {
 	status := c.QueryParam("status")
 
-	var csrs []*struct{}
+	var csrs []*model.CSR
 	var err error
 
 	if status == "pending" {
-		csrs, err = nil, nil // stub
-		_ = sc.csrInteractor.ListPendingCSRs()
+		csrs, err = sc.csrInteractor.ListPendingCSRs()
 	} else {
-		csrs, err = nil, nil // stub
-		_ = sc.csrInteractor.ListAllCSRs()
+		csrs, err = sc.csrInteractor.ListAllCSRs()
 	}
 
 	_ = csrs
@@ -66,7 +65,7 @@ func (sc *csrController) GetCSR(c Context) error {
 
 // SubmitCSRRequest is the HTTP body for submitting a CSR.
 type SubmitCSRRequest struct {
-	Pem           string `json:"pem"`
+	Pem            string `json:"pem"`
 	RequesterEmail string `json:"requester_email"`
 }
 

@@ -40,7 +40,7 @@ func (ec *echoContext) QueryParam(name string) string {
 }
 
 func (ec *echoContext) Status(code int) error {
-	return ec.c.Status(code)
+	return ec.c.NoContent(code)
 }
 
 func (ec *echoContext) Get(key string) any {

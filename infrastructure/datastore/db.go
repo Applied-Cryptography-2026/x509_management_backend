@@ -1,11 +1,8 @@
 package datastore
 
 import (
-	"database/sql"
-	"log"
-
-	"github.com/your-org/x509-clean-architecture/config"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/your-org/x509-clean-architecture/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

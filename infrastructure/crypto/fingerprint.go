@@ -10,7 +10,7 @@ import (
 // SHA256Fingerprint returns the colon-separated SHA-256 fingerprint of a certificate.
 func SHA256Fingerprint(cert *x509.Certificate) string {
 	sum := sha256.Sum256(cert.Raw)
-	hexed := hex.EncodeToString(sum[:])
+	// hexed := hex.EncodeToString(sum[:])
 	// Format as colon-separated pairs: AA:BB:CC:...
 	parts := make([]string, len(sum))
 	for i, b := range sum {

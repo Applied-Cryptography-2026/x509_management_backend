@@ -6,6 +6,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 // NewDBMock creates a GORM instance backed by a SQL mock.
@@ -21,11 +22,12 @@ func NewDBMock(t *testing.T) (*gorm.DB, sqlmock.Sqlmock, error) {
 	gdb, err := gorm.Open(mysql.New(mysql.Config{
 		Conn:                      db,
 		SkipInitializeWithVersion: true,
-	}), &gorm.Config{})
+	}), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		return nil, nil, err
 	}
 
-	gdb.LogMode(true)
 	return gdb, mock, nil
 }
